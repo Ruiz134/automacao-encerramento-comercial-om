@@ -1,22 +1,27 @@
 import pandas as pd
-import psutil
+from pathlib import Path
+import time
+   
+def transformação_excel(filename, input_output):
 
-def fechar_excel_instancia():
+    BASE = Path(input_output) / filename
 
-    for proc in psutil.process_iter(['pid', 'name']):
-        if proc.info['name'] and 'EXCEL' in proc.info['name'].upper():
-            try:
-                proc.terminate()
-            except:
-                pass
+    time.sleep(2)
 
-def _status_text(session) -> str:
-    try:
-        return session.findById("wnd[0]/sbar").Text.strip()
-    except Exception:
-        return ""
+    df = pd.read_excel(BASE, skiprows=1)
+    df = df.dropna(how='all')
+    df = df.dropna(axis=1, how='all')
+    df = df.reset_index(drop=True)
+    df.columns = df.columns.str.strip()
+    df['Ordem'] = pd.to_numeric(df['Ordem'], errors='coerce')
 
-def extract_ordens(session, tcode: str,  variante = "SAP_RUIZ_IW38", output = str, filename = "relat_ordens")-> pd.Dataframe:
+    df['Ordem'] = df['Ordem'].astype(int)
+
+    df.to_excel(BASE, index=False)
+
+    print(f"Transformação concluída: {filename}")
+
+def extract_ordens(session, tcode: str,  variante = "SAP_RUIZ_IW38", output = str, filename = "relat_ordens"):
     
     
     session.findById("wnd[0]").maximize()
@@ -41,3 +46,8 @@ def extract_ordens(session, tcode: str,  variante = "SAP_RUIZ_IW38", output = st
     session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").setFocus()
     session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").caretPosition = (0)
     session.findById("wnd[1]/tbar[0]/btn[0]").press()
+
+    print(f"Extração concluída: {filename}")
+
+    transformação_excel(filename, output)
+

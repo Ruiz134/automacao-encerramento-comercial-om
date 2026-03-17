@@ -5,7 +5,7 @@ BASE_BDOC = Path(r'C:\Users\FL4K\PETROBRAS\G&E TERM UTE-CBT - 4. BANCO_AUTOMATIZ
 
 DATA_DIR = BASE_DIR / 'dados' #pasta dados
 DATA_DB_DIR = DATA_DIR / 'db'
-DATA_INPUT_DIR = DATA_DIR / 'ordens_para_encerrar'
-DATA_PROCESS_DIR = DATA_DIR / 'ordens_encerradas'
+DATA_INPUT_DIR = DATA_DIR / 'input'
+DATA_PROCESS_DIR = DATA_DIR / 'process'
 
 print(BASE_DIR)
