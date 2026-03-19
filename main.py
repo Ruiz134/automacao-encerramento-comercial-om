@@ -17,6 +17,8 @@ if __name__ == '__main__':
     
     if sessao:
 
+        #Extração Ordens para Encerrar
+        
         exo.extract_ordens(
             session = conectar_sap(),
             tcode = "IW38",
